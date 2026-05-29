@@ -16,7 +16,7 @@ Backend assignment — Node + Express + MySQL + Sequelize, with a Discord bot on
 You need Node 18+ and MySQL running locally (or a remote DB you can connect to).
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/rahulsinghpharthyal/VyomXpress_backend_project.git
 cd vyomxpress
 npm install
 cp .env.example .env
@@ -136,4 +136,4 @@ Deployed on Railway. To deploy yourself:
 5. After first deploy, open the Railway shell and run `npm run migrate`
 6. Run `npm run bot:deploy` once to register slash commands
 
-Live URL: `<paste your Railway URL here after deploying>`
+Live URL: `https://vyomxpress-backend-project.onrender.com`
