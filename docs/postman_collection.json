@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "VyomXpress",
-    "description": "Auth + user APIs for the VyomXpress backend. Run Login first — the token is auto-saved into the {{token}} variable so the protected routes work without copy-paste.",
+    "description": "Auth + user APIs for the VyomXpress backend. Run Login first, the token gets auto-saved into the {{token}} variable so the protected routes work without copy-paste.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
