@@ -1,0 +1,225 @@
+{
+  "info": {
+    "name": "VyomXpress",
+    "description": "Auth + user APIs for the VyomXpress backend. Run Login first — the token is auto-saved into the {{token}} variable so the protected routes work without copy-paste.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000/api/v1" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Signup",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/auth/signup", "host": ["{{baseUrl}}"], "path": ["auth", "signup"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"rahul\",\n  \"email\": \"rahul@example.com\",\n  \"password\": \"secret123\"\n}"
+            },
+            "description": "Create a new user. Username must be unique (returns 409 if taken). Password must be at least 6 characters. Returns the created user and a JWT."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const body = pm.response.json();",
+                  "  if (body.token) pm.collectionVariables.set('token', body.token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "url": { "raw": "{{baseUrl}}/auth/signup", "host": ["{{baseUrl}}"], "path": ["auth", "signup"] },
+                "body": { "mode": "raw", "raw": "{\"username\":\"rahul\",\"password\":\"secret123\"}" }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"message\": \"signup successful\",\n  \"user\": {\n    \"id\": 1,\n    \"username\": \"rahul\",\n    \"email\": \"rahul@example.com\",\n    \"createdAt\": \"2026-05-29T10:00:00.000Z\",\n    \"updatedAt\": \"2026-05-29T10:00:00.000Z\"\n  },\n  \"token\": \"eyJhbGciOiJIUzI1NiIs...\"\n}"
+            },
+            {
+              "name": "409 Username taken",
+              "originalRequest": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "url": { "raw": "{{baseUrl}}/auth/signup", "host": ["{{baseUrl}}"], "path": ["auth", "signup"] },
+                "body": { "mode": "raw", "raw": "{\"username\":\"rahul\",\"password\":\"secret123\"}" }
+              },
+              "status": "Conflict",
+              "code": 409,
+              "_postman_previewlanguage": "json",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"message\": \"username already taken\"\n}"
+            },
+            {
+              "name": "400 Validation error",
+              "originalRequest": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "url": { "raw": "{{baseUrl}}/auth/signup", "host": ["{{baseUrl}}"], "path": ["auth", "signup"] },
+                "body": { "mode": "raw", "raw": "{\"username\":\"rahul\"}" }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"message\": \"username and password are required\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"rahul\",\n  \"password\": \"secret123\"\n}"
+            },
+            "description": "Returns a JWT for an existing user. The test script automatically saves the token to the {{token}} collection variable on success."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  const body = pm.response.json();",
+                  "  if (body.token) pm.collectionVariables.set('token', body.token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] },
+                "body": { "mode": "raw", "raw": "{\"username\":\"rahul\",\"password\":\"secret123\"}" }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"message\": \"login successful\",\n  \"user\": {\n    \"id\": 1,\n    \"username\": \"rahul\",\n    \"email\": \"rahul@example.com\"\n  },\n  \"token\": \"eyJhbGciOiJIUzI1NiIs...\"\n}"
+            },
+            {
+              "name": "401 Invalid credentials",
+              "originalRequest": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] },
+                "body": { "mode": "raw", "raw": "{\"username\":\"rahul\",\"password\":\"wrong\"}" }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"message\": \"invalid credentials\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get me",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/users/me", "host": ["{{baseUrl}}"], "path": ["users", "me"] },
+            "description": "Returns the currently authenticated user, decoded from the JWT. Run Login first to populate the token variable."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": { "raw": "{{baseUrl}}/users/me", "host": ["{{baseUrl}}"], "path": ["users", "me"] }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"user\": {\n    \"id\": 1,\n    \"username\": \"rahul\",\n    \"email\": \"rahul@example.com\",\n    \"createdAt\": \"2026-05-29T10:00:00.000Z\",\n    \"updatedAt\": \"2026-05-29T10:00:00.000Z\"\n  }\n}"
+            },
+            {
+              "name": "401 Missing token",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": { "raw": "{{baseUrl}}/users/me", "host": ["{{baseUrl}}"], "path": ["users", "me"] }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"message\": \"Missing or invalid token\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get by username",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/users/rahul", "host": ["{{baseUrl}}"], "path": ["users", "rahul"] },
+            "description": "Look up any user by their username. Returns 404 if no user matches."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": { "raw": "{{baseUrl}}/users/rahul", "host": ["{{baseUrl}}"], "path": ["users", "rahul"] }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"user\": {\n    \"id\": 1,\n    \"username\": \"rahul\",\n    \"email\": \"rahul@example.com\",\n    \"createdAt\": \"2026-05-29T10:00:00.000Z\",\n    \"updatedAt\": \"2026-05-29T10:00:00.000Z\"\n  }\n}"
+            },
+            {
+              "name": "404 Not found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": { "raw": "{{baseUrl}}/users/nobody", "host": ["{{baseUrl}}"], "path": ["users", "nobody"] }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"message\": \"user not found\"\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
